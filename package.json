@@ -1,0 +1,17 @@
+{
+  "name": "galaxy-watch8-sport-watchface",
+  "version": "1.0.0",
+  "description": "Premium Sport & Fitness Watch Face and WFF Studio for Samsung Galaxy Watch 8",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  },
+  "dependencies": {
+    "jszip": "^3.10.2"
+  }
+}

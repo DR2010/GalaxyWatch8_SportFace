@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+.gradle/
+android-wearos-project/.gradle/
+android-wearos-project/app/build/
+
+# Standalone build tools cache & temporary outputs
+tools/jre/
+tools/compiled_res.zip
+tools/unaligned.apk
+tools/unaligned-aligned-debugSigned.apk*
+*.idsig
+
+# System & Editor files
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/

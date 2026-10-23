@@ -1,0 +1,150 @@
+// Packages the complete Android Studio Wear OS 5/6 Watch Face Project into a downloadable ZIP
+
+import JSZip from 'jszip';
+import { generateWFFXml } from './wffGenerator.js';
+
+export async function createAndroidProjectZip(state) {
+  const zip = new JSZip();
+  const wffXml = generateWFFXml(state);
+
+  // 1. Root settings.gradle.kts
+  zip.file('settings.gradle.kts', `pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "GalaxyWatch8SportFace"
+include(":app")
+`);
+
+  // 2. Root build.gradle.kts
+  zip.file('build.gradle.kts', `plugins {
+    id("com.android.application") version "8.5.2" apply false
+}
+`);
+
+  // 3. gradle.properties
+  zip.file('gradle.properties', `org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+android.useAndroidX=true
+android.nonTransitiveRClass=true
+`);
+
+  // 4. app/build.gradle.kts
+  zip.file('app/build.gradle.kts', `plugins {
+    id("com.android.application")
+}
+
+android {
+    namespace = "com.galaxywatch.sportface"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.galaxywatch.sportface"
+        minSdk = 33 // Android 13 / Wear OS 4+ (Strictly required for Watch Face Format)
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+}
+`);
+
+  // 5. app/src/main/AndroidManifest.xml
+  zip.file('app/src/main/AndroidManifest.xml', `<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Galaxy Watch 8 Sport Face"
+        android:hasCode="false">
+
+        <!-- Watch Face Format v2 indicator for Wear OS 5 & 6 / Galaxy Watch 8 -->
+        <property
+            android:name="com.google.android.wearable.watchface.format.version"
+            android:value="2" />
+
+        <service
+            android:name="com.google.android.wearable.watchface.DeclarativeWatchFaceService"
+            android:exported="true"
+            android:label="Galaxy Watch 8 Sport Face"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watchface" />
+        </service>
+    </application>
+
+</manifest>
+`);
+
+  // 6. app/src/main/res/xml/watchface.xml
+  zip.file('app/src/main/res/xml/watchface.xml', wffXml);
+
+  // 7. app/src/main/res/values/strings.xml
+  zip.file('app/src/main/res/values/strings.xml', `<resources>
+    <string name="app_name">Galaxy Watch 8 Sport Face</string>
+</resources>
+`);
+
+  // 8. README.md with detailed Galaxy Watch 8 deployment instructions
+  zip.file('README.md', `# Galaxy Watch 8 - Sport & Fitness Watch Face
+
+This project contains a declarative **Watch Face Format (WFF)** package for Samsung Galaxy Watch 8 (Wear OS 5 / Wear OS 6).
+
+## Method 1: Sideload via Wireless ADB (Fastest)
+
+1. **Enable Developer Options on Galaxy Watch 8**:
+   - On the watch, go to **Settings > About watch > Software info**.
+   - Tap **Software version** 7 times until you see "Developer mode turned on".
+2. **Enable Wireless Debugging**:
+   - Go to **Settings > Developer options**.
+   - Turn ON **ADB debugging** and **Wireless debugging**.
+   - Tap **Pair new device** to see the IP, pairing port, and 6-digit code.
+3. **Connect from Computer Terminal**:
+   \`\`\`bash
+   adb pair <WATCH_IP>:<PAIRING_PORT> <PAIRING_CODE>
+   adb connect <WATCH_IP>:<CONNECTION_PORT>
+   \`\`\`
+4. **Compile & Install**:
+   - Open this directory in **Android Studio Iguana / Jellyfish / Ladybug**.
+   - Click **Run (Shift+F10)** targeting your paired Galaxy Watch 8.
+   - Or build the APK via Gradle:
+     \`\`\`bash
+     ./gradlew assembleDebug
+     adb install app/build/outputs/apk/debug/app-debug.apk
+     \`\`\`
+
+## Method 2: Samsung Watch Face Studio (WFS)
+
+1. Download **Samsung Watch Face Studio** from [developer.samsung.com/watch-face-studio](https://developer.samsung.com/watch-face-studio).
+2. The elements generated in \`app/src/main/res/xml/watchface.xml\` directly correspond to WFS components (Digital Clock, Activity Ring arcs, Heart Rate & Step Complications).
+
+---
+Generated by Galaxy Watch 8 Watch Face Studio.
+`);
+
+  return zip.generateAsync({ type: 'blob' });
+}

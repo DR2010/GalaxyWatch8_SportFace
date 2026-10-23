@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galaxy Watch 8 - Sport & Fitness Dashboard Watch Face Studio</title>
+  <meta name="description" content="Design, preview, and generate official Wear OS 5/6 Watch Face Format (WFF) declarative XML for Samsung Galaxy Watch 8.">
+
+  <!-- Google Fonts: Modern Athletic Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Permanent+Marker&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="brand-wrap">
+      <span class="brand-badge">WEAR OS 5 / 6</span>
+      <div>
+        <h1 class="brand-title">
+          Galaxy Watch 8
+          <span class="brand-subtitle">Sport & Fitness Studio</span>
+        </h1>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="aod-toggle-btn" class="btn-secondary" title="Test Always-On Display power-saving mode">
+        <span class="icon">🌙</span> Preview AOD Mode
+      </button>
+
+      <button id="open-export-modal-btn" class="btn-primary" title="Export Watch Face Format XML or Android Studio Project">
+        <span class="icon">⚡</span> Export WFF / Android APK
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Grid -->
+  <main class="studio-layout">
+
+    <!-- Center Stage: Realistic Galaxy Watch 8 Hardware Simulator -->
+    <section class="watch-stage" aria-label="Galaxy Watch 8 Preview Stage">
+      
+      <div class="stage-header-bar">
+        <span id="aod-status-badge" class="status-pill pill-active">ACTIVE AMOLED</span>
+        <span id="opr-metric-badge" class="status-pill opr-pill">OPR: 7.4% (Wear OS Compliant &lt;15%)</span>
+      </div>
+
+      <!-- Watch Hardware Assembly -->
+      <div class="watch-hardware-container">
+        <!-- Top Fluted Silicone Strap -->
+        <div id="watch-strap-top" class="watch-strap strap-top"></div>
+
+        <!-- Titanium / Armor Aluminum Bezel Frame -->
+        <div id="watch-bezel-frame" class="watch-bezel-frame" data-finish="titanium">
+          <!-- Dual Tactile Right Hardware Pushers -->
+          <div class="watch-button btn-home" title="Galaxy Watch Action Button"></div>
+          <div class="watch-button btn-back" title="Galaxy Watch Back Button"></div>
+
+          <!-- Precision Chapter Inner Ring -->
+          <div class="inner-bezel-ring">
+            <!-- 450x450 Super AMOLED Display Canvas -->
+            <canvas id="watchface-canvas" width="450" height="450" aria-label="Interactive Watch Face Display"></canvas>
+            <!-- Curved Sapphire Crystal Reflection -->
+            <div id="watch-glass-reflection" class="glass-reflection-overlay"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Fluted Silicone Strap -->
+        <div id="watch-strap-bottom" class="watch-strap strap-bottom"></div>
+      </div>
+
+      <p class="stage-caption">
+        <span>👆</span> Tap any complication (Heart Rate, Steps, Activity Rings, Battery, Weather) to open simulated Samsung Health apps.
+      </p>
+    </section>
+
+    <!-- Sidebar: Real-time Customization & Sensor Telemetry Controls -->
+    <aside class="studio-sidebar" aria-label="Watch Face Studio Controls">
+
+      <!-- 1. Color Theme Palette Selection -->
+      <section class="control-card">
+        <div class="card-title">
+          <span>🎨 Color Themes</span>
+          <span style="font-size: 11px; color: var(--accent-volt);">Wear OS Customizer</span>
+        </div>
+        <div id="theme-options" class="theme-grid"></div>
+      </section>
+
+      <!-- 2. Watch Face Layout Variations -->
+      <section class="control-card">
+        <div class="card-title">
+          <span>📐 Athletic Layouts</span>
+        </div>
+        <div id="layout-options" class="layout-grid"></div>
+      </section>
+
+      <!-- 3. Biometrics & Live Telemetry Simulators -->
+      <section class="control-card">
+        <div class="card-title">
+          <span>❤️ Biometrics & Telemetry</span>
+          <span style="font-size: 11px; color: var(--accent-cyan);">Live Sensors</span>
+        </div>
+
+        <!-- Heart Rate (BPM) Slider -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Heart Rate (BioActive Sensor)</span>
+            <span id="hr-val" class="slider-val">128 BPM</span>
+          </div>
+          <input type="range" id="hr-slider" min="45" max="195" value="128">
+          
+          <!-- Quick HR Zone Chips -->
+          <div class="pill-group" style="margin-top: 4px;">
+            <button class="chip-btn" data-hr-target="65">Rest 65</button>
+            <button class="chip-btn" data-hr-target="115">Warmup 115</button>
+            <button class="chip-btn" data-hr-target="138">Cardio 138</button>
+            <button class="chip-btn" data-hr-target="182">Peak 182</button>
+          </div>
+        </div>
+
+        <!-- Daily Steps Slider -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Daily Step Counter</span>
+            <span id="step-val" class="slider-val">8,450 steps</span>
+          </div>
+          <input type="range" id="step-slider" min="0" max="22000" step="100" value="8450">
+        </div>
+
+        <!-- Calories Burned Slider -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Active Calories Burned</span>
+            <span id="cal-val" class="slider-val">540 kcal</span>
+          </div>
+          <input type="range" id="cal-slider" min="0" max="1500" step="10" value="540">
+        </div>
+
+        <!-- Battery & Charging -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Battery Level</span>
+            <span id="batt-val" class="slider-val">84%</span>
+          </div>
+          <input type="range" id="batt-slider" min="5" max="100" value="84">
+        </div>
+
+        <div class="toggle-row">
+          <span>Fast Wireless Charging</span>
+          <label class="switch">
+            <input type="checkbox" id="chg-toggle">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <!-- Weather Simulation -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Weather Condition</span>
+          </div>
+          <select id="weather-cond" class="btn-secondary" style="width: 100%; border-radius: 6px; padding: 6px 10px;">
+            <option value="sunny">Sunny / Clear</option>
+            <option value="cloudy">Partly Cloudy</option>
+            <option value="rain">Rain / Showers</option>
+          </select>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>Temperature</span>
+            <span id="temp-val" class="slider-val">23°C</span>
+          </div>
+          <input type="range" id="temp-slider" min="-10" max="45" value="23">
+        </div>
+      </section>
+
+      <!-- 4. Watch Face Options & Toggles -->
+      <section class="control-card">
+        <div class="card-title">
+          <span>⚙️ Watch Face Options</span>
+        </div>
+
+        <div class="toggle-row">
+          <span>24-Hour Time Format</span>
+          <label class="switch">
+            <input type="checkbox" id="time-format-toggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span>Sweeping Seconds Track</span>
+          <label class="switch">
+            <input type="checkbox" id="sec-toggle">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span>Sapphire Glass Reflection</span>
+          <label class="switch">
+            <input type="checkbox" id="glass-toggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- 5. Galaxy Watch 8 Case & Strap Customizer -->
+      <section class="control-card">
+        <div class="card-title">
+          <span>⌚ Galaxy Watch 8 Hardware</span>
+        </div>
+
+        <div>
+          <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px;">CASE FINISH</span>
+          <div class="finish-swatches">
+            <button class="finish-btn active" data-case-finish="titanium">Titanium Gray</button>
+            <button class="finish-btn" data-case-finish="phantom-black">Phantom Black</button>
+            <button class="finish-btn" data-case-finish="silver">Silver Chrome</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px;">SPORT BAND COLOR</span>
+          <div class="finish-swatches">
+            <button class="finish-btn active" data-strap-color="#1B2620">Forest Volt</button>
+            <button class="finish-btn" data-strap-color="#2B120B">Solar Amber</button>
+            <button class="finish-btn" data-strap-color="#0F1D2C">Marine Blue</button>
+            <button class="finish-btn" data-strap-color="#1E232B">Stealth Dark</button>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+  </main>
+
+  <!-- Modal: Watch Face Format (WFF) XML & Android Studio Project Exporter -->
+  <div id="export-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>⚡</span>
+          <span>Watch Face Format (WFF) Exporter & Sideload Guide</span>
+        </div>
+        <button id="close-export-modal-btn" class="modal-close-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn active" data-target="tab-wff-xml">Declarative WFF XML</button>
+        <button class="modal-tab-btn" data-target="tab-adb-guide">Wireless Sideload (Galaxy Watch 8)</button>
+        <button class="modal-tab-btn" data-target="tab-wfs-guide">Samsung Watch Face Studio</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Tab 1: XML Preview -->
+        <div id="tab-wff-xml" class="modal-tab-pane active">
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            This is the official <b>Watch Face Format (WFF) v2.0</b> declarative XML for Google Wear OS 5 & 6 (Samsung Galaxy Watch 8 / 7 / Ultra). It dynamically reflects all your configured colors, complications, and activity metrics.
+          </p>
+          <div class="code-viewer-container">
+            <pre><code id="wff-xml-content"></code></pre>
+          </div>
+        </div>
+
+        <!-- Tab 2: Wireless Sideload Guide -->
+        <div id="tab-adb-guide" class="modal-tab-pane">
+          <div class="guide-step">
+            <h4>1. Enable Wireless Debugging on Galaxy Watch 8</h4>
+            <p>On your Galaxy Watch 8, navigate to <b>Settings &gt; About watch &gt; Software info</b> and tap <b>Software version</b> 7 times. Then go to <b>Settings &gt; Developer options</b> and enable <b>ADB debugging</b> and <b>Wireless debugging</b>.</p>
+          </div>
+
+          <div class="guide-step">
+            <h4>2. Pair with Your Computer via ADB</h4>
+            <p>Tap <b>Pair new device</b> on the watch to get the pairing port and 6-digit code. Run in terminal:</p>
+            <div class="cmd-snippet">
+              <code>adb pair &lt;WATCH_IP&gt;:&lt;PAIRING_PORT&gt; &lt;CODE&gt;</code>
+            </div>
+            <p>Then connect using the main wireless debugging port:</p>
+            <div class="cmd-snippet">
+              <code>adb connect &lt;WATCH_IP&gt;:&lt;PORT&gt;</code>
+            </div>
+          </div>
+
+          <div class="guide-step">
+            <h4>3. Build & Install</h4>
+            <p>Download the pre-configured Android Studio project ZIP below, open it in Android Studio, and click <b>Run</b> or execute:</p>
+            <div class="cmd-snippet">
+              <code>./gradlew installDebug</code>
+            </div>
+            <p>The watch face will immediately appear in your Galaxy Wearable app and watch face selector!</p>
+          </div>
+        </div>
+
+        <!-- Tab 3: Samsung Watch Face Studio Guide -->
+        <div id="tab-wfs-guide" class="modal-tab-pane">
+          <div class="guide-step">
+            <h4>Using Samsung Watch Face Studio (WFS)</h4>
+            <p>Samsung Watch Face Studio is Samsung's official visual authoring software for Galaxy Watches.</p>
+            <ul style="padding-left: 1.25rem; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+              <li>Install <b>Watch Face Studio</b> from <a href="https://developer.samsung.com/watch-face-studio" target="_blank" style="color: var(--accent-cyan);">developer.samsung.com</a>.</li>
+              <li>Create a new project targeting <b>450 x 450</b> (Round display).</li>
+              <li>Add a <b>Digital Clock</b> component with high-weight geometric typeface.</li>
+              <li>Add three <b>Progress Bar (Arc)</b> components mapped to Samsung Health tag expressions: <code>[CALORIES]</code>, <code>[ACTIVE_MINUTES]</code>, and <code>[STEP_COUNT]</code>.</li>
+              <li>Add <b>Complication Slots</b> for Heart Rate and Battery.</li>
+              <li>Export directly as a signed APK or upload to the Google Play Console!</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button id="copy-xml-btn" class="btn-secondary">📋 Copy XML</button>
+        <button id="download-xml-btn" class="btn-secondary">📄 Download watchface.xml</button>
+        <button id="download-zip-btn" class="btn-primary">📦 Download Android Studio ZIP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Simulated Samsung Health App Detail -->
+  <div id="health-modal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-dialog health-modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title" id="health-modal-title">Samsung Health</div>
+        <button class="modal-close-btn" onclick="document.getElementById('health-modal').classList.remove('visible')">&times;</button>
+      </div>
+      <div class="modal-body" id="health-modal-body"></div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button class="btn-secondary" onclick="document.getElementById('health-modal').classList.remove('visible')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entry Script -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
